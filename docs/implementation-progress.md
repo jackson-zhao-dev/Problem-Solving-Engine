@@ -16,16 +16,18 @@ Core Data Model Implementation
 - State integrated into `src/main.cpp`.
 - Project compiled and ran successfully.
 - State implementation committed and pushed to GitHub.
+- Validation data model implemented in `include/Validation.h`.
+- Validation integrated into `src/main.cpp`, compiled, and ran successfully.
 
 ## Core Structure Progress
 
 - State — Complete
-- Validation — Next
-- Constraint — Not Started
+- Validation — Complete
+- Constraint — Next
 - Dependency — Not Started
 - Node — Not Started
 - Goal — Not Started
 
 ## Next Step
 
-Implement the Validation data model.
+Implement the Constraint data model.
