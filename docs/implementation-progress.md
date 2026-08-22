@@ -1,6 +1,6 @@
 # Implementation Progress
 
-Last Updated: 2026-08-21
+Last Updated: 2026-08-22
 
 ## Current Phase
 
@@ -18,16 +18,18 @@ Core Data Model Implementation
 - State implementation committed and pushed to GitHub.
 - Validation data model implemented in `include/Validation.h`.
 - Validation integrated into `src/main.cpp`, compiled, and ran successfully.
+- Constraint data model implemented in `include/Constraint.h`.
+- Constraint integrated into `src/main.cpp`, compiled, and ran successfully.
 
 ## Core Structure Progress
 
 - State — Complete
 - Validation — Complete
-- Constraint — Next
-- Dependency — Not Started
+- Constraint — Complete
+- Dependency — Next
 - Node — Not Started
 - Goal — Not Started
 
 ## Next Step
 
-Implement the Constraint data model.
+Implement the Dependency data model.
