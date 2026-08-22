@@ -4,6 +4,7 @@
 #include "../include/Constraint.h"
 #include "../include/Dependency.h"
 #include "../include/Node.h"
+#include "../include/Goal.h"
 using namespace std;
 
 int main()
@@ -32,7 +33,12 @@ int main()
     testNode.state = State::Ready;
     testNode.priority = 3;
     testNode.validation = startupValidation;
-    
+
+    Goal projectGoal;
+    projectGoal.name = "Build Rubber-Band Car";
+    projectGoal.description = "Build a small car powered by a rubber band.";
+    projectGoal.successCondition = "The car travels at least 10 meters.";
+
     cout << "Problem-Solving Engine is running." << endl;
 
     return 0;
