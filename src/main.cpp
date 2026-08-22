@@ -3,6 +3,7 @@
 #include "../include/Validation.h"
 #include "../include/Constraint.h"
 #include "../include/Dependency.h"
+#include "../include/Node.h"
 using namespace std;
 
 int main()
@@ -23,6 +24,14 @@ int main()
     Dependency buildDependency;
     buildDependency.fromNode = 1;
     buildDependency.toNode = 2;
+
+    Node testNode;
+    testNode.id = 1;
+    testNode.name = "Prepare Materials";
+    testNode.description = "Prepare all required materials.";
+    testNode.state = State::Ready;
+    testNode.priority = 3;
+    testNode.validation = startupValidation;
     
     cout << "Problem-Solving Engine is running." << endl;
 
