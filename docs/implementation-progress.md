@@ -20,16 +20,18 @@ Core Data Model Implementation
 - Validation integrated into `src/main.cpp`, compiled, and ran successfully.
 - Constraint data model implemented in `include/Constraint.h`.
 - Constraint integrated into `src/main.cpp`, compiled, and ran successfully.
+- Dependency data model implemented in `include/Dependency.h`.
+- Dependency integrated into `src/main.cpp`, compiled, and ran successfully.
 
 ## Core Structure Progress
 
 - State — Complete
 - Validation — Complete
 - Constraint — Complete
-- Dependency — Next
-- Node — Not Started
+- Dependency — Complete
+- Node — Next
 - Goal — Not Started
 
 ## Next Step
 
-Implement the Dependency data model.
+Implement the Node data model.

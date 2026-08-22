@@ -2,6 +2,7 @@
 #include "../include/State.h"
 #include "../include/Validation.h"
 #include "../include/Constraint.h"
+#include "../include/Dependency.h"
 using namespace std;
 
 int main()
@@ -18,6 +19,10 @@ int main()
     budgetConstraint.type = ConstraintType::Cost;
     budgetConstraint.value = "Under $30";
     budgetConstraint.status = ConstraintStatus::Satisfied;
+
+    Dependency buildDependency;
+    buildDependency.fromNode = 1;
+    buildDependency.toNode = 2;
     
     cout << "Problem-Solving Engine is running." << endl;
 
