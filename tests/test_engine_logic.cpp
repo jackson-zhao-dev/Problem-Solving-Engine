@@ -205,5 +205,58 @@ int main()
         )
     );
 
+    // Constraint Checking tests
+    std::vector<Constraint> emptyConstraints;
+
+    assert(
+        evaluateConstraintStatus(emptyConstraints)
+        == ConstraintStatus::Satisfied
+    );
+
+    Constraint constraintSatisfied1{};
+    constraintSatisfied1.status = ConstraintStatus::Satisfied;
+
+    Constraint constraintSatisfied2{};
+    constraintSatisfied2.status = ConstraintStatus::Satisfied;
+
+    std::vector<Constraint> allSatisfiedConstraints =
+    {
+        constraintSatisfied1,
+        constraintSatisfied2
+    };
+
+    assert(
+        evaluateConstraintStatus(allSatisfiedConstraints)
+        == ConstraintStatus::Satisfied
+    );
+
+    Constraint constraintUnknown{};
+    constraintUnknown.status = ConstraintStatus::Unknown;
+
+    std::vector<Constraint> unknownConstraints =
+    {
+        constraintSatisfied1,
+        constraintUnknown
+    };
+
+    assert(
+        evaluateConstraintStatus(unknownConstraints)
+        == ConstraintStatus::Unknown
+    );
+
+    Constraint constraintViolated{};
+    constraintViolated.status = ConstraintStatus::Violated;
+
+    std::vector<Constraint> mixedConstraints =
+    {
+        constraintUnknown,
+        constraintViolated
+    };
+
+    assert(
+        evaluateConstraintStatus(mixedConstraints)
+        == ConstraintStatus::Violated
+    );
+
     return 0;
 }

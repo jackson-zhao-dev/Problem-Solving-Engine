@@ -101,6 +101,33 @@ bool isValidStateTransition(State from, State to)
     return false;
 }
 
+ConstraintStatus evaluateConstraintStatus(
+    const std::vector<Constraint>& constraints
+)
+{
+    bool hasUnknown = false;
+
+    for (const Constraint& constraint : constraints)
+    {
+        if (constraint.status == ConstraintStatus::Violated)
+        {
+            return ConstraintStatus::Violated;
+        }
+
+        if (constraint.status == ConstraintStatus::Unknown)
+        {
+            hasUnknown = true;
+        }
+    }
+
+    if (hasUnknown)
+    {
+        return ConstraintStatus::Unknown;
+    }
+
+    return ConstraintStatus::Satisfied;
+}
+
 State evaluateReadyState(
     const Node& node,
     const std::vector<Node>& nodes,
@@ -115,12 +142,10 @@ State evaluateReadyState(
         return node.state;
     }
 
-    for (const Constraint& constraint : constraints)
+    if (evaluateConstraintStatus(constraints)
+        != ConstraintStatus::Satisfied)
     {
-        if (constraint.status != ConstraintStatus::Satisfied)
-        {
-            return State::Blocked;
-        }
+        return State::Blocked;
     }
 
     for (const Dependency& dependency : dependencies)

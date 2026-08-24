@@ -39,7 +39,12 @@ Engine Logic - In Progress
 - Invalid dependency references are detected.
 - Self-dependencies are detected and rejected.
 - Dependency cycle detection implemented.
-- Engine logic automated tests updated to cover dependency validation and cycle detection.
+- Constraint status evaluation implemented.
+- Constraint checking integrated into Ready-state evaluation.
+- Empty constraint sets are treated as satisfied.
+- Unknown constraints prevent a node from becoming Ready.
+- Violated constraints block a node.
+- Engine logic automated tests updated to cover constraint checking.
 - Full automated test suite passed successfully: 2/2 tests passed.
 
 ## Core Structure Progress
@@ -65,10 +70,10 @@ Engine Logic - In Progress
 - Ready-state Evaluation - Complete
 - Dependency Validation - Complete
 - Cycle Detection - Complete
-- Constraint Checking - Not Started
+- Constraint Checking - Complete
 - Next-Step Algorithm - Not Started
 - Failure Diagnosis - Not Started
 
 ## Next Step
 
-Continue Engine Logic implementation with constraint checking.
+Continue Engine Logic implementation with the Next-Step Algorithm.

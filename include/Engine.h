@@ -25,3 +25,7 @@ bool hasDependencyCycle(
     const std::vector<Node>& nodes,
     const std::vector<Dependency>& dependencies
 );
+
+ConstraintStatus evaluateConstraintStatus(
+    const std::vector<Constraint>& constraints
+);
