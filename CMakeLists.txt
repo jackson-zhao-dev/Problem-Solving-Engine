@@ -8,6 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(problem-solving-engine
     src/main.cpp
+    src/Engine.cpp
 )
 
 target_include_directories(problem-solving-engine PRIVATE
@@ -27,4 +28,18 @@ target_include_directories(core-model-tests PRIVATE
 add_test(
     NAME CoreModelTests
     COMMAND core-model-tests
+)
+
+add_executable(engine-logic-tests
+    tests/test_engine_logic.cpp
+    src/Engine.cpp
+)
+
+target_include_directories(engine-logic-tests PRIVATE
+    include
+)
+
+add_test(
+    NAME EngineLogicTests
+    COMMAND engine-logic-tests
 )

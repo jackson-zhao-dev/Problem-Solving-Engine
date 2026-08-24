@@ -1,10 +1,10 @@
 # Implementation Progress
 
-Last Updated: 2026-08-23
+Last Updated: 2026-08-24
 
 ## Current Phase
 
-Build System and Initial Testing - Complete
+Engine Logic - In Progress
 
 ## Completed
 
@@ -29,7 +29,15 @@ Build System and Initial Testing - Complete
 - Core model test implemented in `tests/test_core_models.cpp`.
 - Core model test target integrated into CMake.
 - CTest configured successfully.
-- Core model automated test passed successfully: 1/1 tests passed.
+- Core model automated test passed successfully.
+- Engine interface created in `include/Engine.h`.
+- Engine implementation created in `src/Engine.cpp`.
+- State-transition rules implemented.
+- Ready-state evaluation implemented.
+- Dependency direction follows `fromNode -> toNode`, where `toNode` waits for `fromNode`.
+- Engine logic automated tests implemented in `tests/test_engine_logic.cpp`.
+- Engine logic test target integrated into CMake.
+- Full automated test suite passed successfully: 2/2 tests passed.
 
 ## Core Structure Progress
 
@@ -48,6 +56,16 @@ Build System and Initial Testing - Complete
 - CTest Integration - Complete
 - Core Model Smoke Test - Complete
 
+## Engine Logic Progress
+
+- State Transition Rules - Complete
+- Ready-state Evaluation - Complete
+- Dependency Validation - Not Started
+- Cycle Detection - Not Started
+- Constraint Checking - Not Started
+- Next-Step Algorithm - Not Started
+- Failure Diagnosis - Not Started
+
 ## Next Step
 
-Begin Engine Logic implementation, starting with state transition rules and Ready-state evaluation.
+Continue Engine Logic implementation with dependency validation and cycle detection.
