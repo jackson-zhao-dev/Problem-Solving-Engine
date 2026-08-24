@@ -222,3 +222,116 @@ bool hasDependencyCycle(
 
     return false;
 }
+
+int calculateUnlockValue(
+    int nodeId,
+    const std::vector<Dependency>& dependencies
+)
+{
+    std::unordered_set<int> downstreamNodes;
+
+    for (const Dependency& dependency : dependencies)
+    {
+        if (dependency.fromNode == nodeId)
+        {
+            downstreamNodes.insert(dependency.toNode);
+        }
+    }
+
+    if (downstreamNodes.empty())
+    {
+        return 1;
+    }
+
+    if (downstreamNodes.size() == 1)
+    {
+        return 2;
+    }
+
+    return 3;
+}
+
+int calculateNextStepScore(
+    const Node& node,
+    const std::vector<Dependency>& dependencies
+)
+{
+    const int unlockValue =
+        calculateUnlockValue(node.id, dependencies);
+
+    return 2 * node.priority + unlockValue;
+}
+
+const Node* selectNextStep(
+    const std::vector<Node>& nodes,
+    const std::vector<Dependency>& dependencies
+)
+{
+    const Node* bestNode = nullptr;
+
+    for (const Node& node : nodes)
+    {
+        if (node.state != State::Ready)
+        {
+            continue;
+        }
+
+        if (bestNode == nullptr)
+        {
+            bestNode = &node;
+            continue;
+        }
+
+        const int nodeScore =
+            calculateNextStepScore(node, dependencies);
+
+        const int bestScore =
+            calculateNextStepScore(*bestNode, dependencies);
+
+        if (nodeScore > bestScore)
+        {
+            bestNode = &node;
+            continue;
+        }
+
+        if (nodeScore < bestScore)
+        {
+            continue;
+        }
+
+        const int nodeUnlockValue =
+            calculateUnlockValue(node.id, dependencies);
+
+        const int bestUnlockValue =
+            calculateUnlockValue(bestNode->id, dependencies);
+
+        if (nodeUnlockValue > bestUnlockValue)
+        {
+            bestNode = &node;
+            continue;
+        }
+
+        if (nodeUnlockValue < bestUnlockValue)
+        {
+            continue;
+        }
+
+        if (node.priority > bestNode->priority)
+        {
+            bestNode = &node;
+            continue;
+        }
+
+        if (node.priority < bestNode->priority)
+        {
+            continue;
+        }
+
+        if (node.id < bestNode->id)
+        {
+            bestNode = &node;
+        }
+    }
+
+    return bestNode;
+}

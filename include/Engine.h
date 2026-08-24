@@ -29,3 +29,18 @@ bool hasDependencyCycle(
 ConstraintStatus evaluateConstraintStatus(
     const std::vector<Constraint>& constraints
 );
+
+int calculateUnlockValue(
+    int nodeId,
+    const std::vector<Dependency>& dependencies
+);
+
+int calculateNextStepScore(
+    const Node& node,
+    const std::vector<Dependency>& dependencies
+);
+
+const Node* selectNextStep(
+    const std::vector<Node>& nodes,
+    const std::vector<Dependency>& dependencies
+);

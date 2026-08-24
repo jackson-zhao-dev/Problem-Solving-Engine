@@ -44,7 +44,13 @@ Engine Logic - In Progress
 - Empty constraint sets are treated as satisfied.
 - Unknown constraints prevent a node from becoming Ready.
 - Violated constraints block a node.
-- Engine logic automated tests updated to cover constraint checking.
+- UnlockValue calculation implemented.
+- NextStepScore calculation implemented using `2 * Priority + UnlockValue`.
+- Ready-node candidate filtering implemented.
+- Deterministic Next-Step selection implemented.
+- Tie-breaking implemented using UnlockValue, Priority, and smaller node ID.
+- No-ready-node case returns no recommendation.
+- Engine logic automated tests updated to cover the Next-Step Algorithm.
 - Full automated test suite passed successfully: 2/2 tests passed.
 
 ## Core Structure Progress
@@ -71,9 +77,9 @@ Engine Logic - In Progress
 - Dependency Validation - Complete
 - Cycle Detection - Complete
 - Constraint Checking - Complete
-- Next-Step Algorithm - Not Started
+- Next-Step Algorithm - Complete
 - Failure Diagnosis - Not Started
 
 ## Next Step
 
-Continue Engine Logic implementation with the Next-Step Algorithm.
+Continue Engine Logic implementation with Failure Diagnosis.

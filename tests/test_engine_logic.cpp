@@ -258,5 +258,204 @@ int main()
         == ConstraintStatus::Violated
     );
 
+    // Next-Step Algorithm tests
+    Node nextNode1{};
+    nextNode1.id = 1;
+    nextNode1.state = State::Ready;
+    nextNode1.priority = 2;
+
+    Node nextNode2{};
+    nextNode2.id = 2;
+    nextNode2.state = State::Ready;
+    nextNode2.priority = 3;
+
+    Node nextNode3{};
+    nextNode3.id = 3;
+    nextNode3.state = State::Blocked;
+    nextNode3.priority = 3;
+
+    Node nextNode4{};
+    nextNode4.id = 4;
+    nextNode4.state = State::NotStarted;
+    nextNode4.priority = 1;
+
+    Node nextNode5{};
+    nextNode5.id = 5;
+    nextNode5.state = State::NotStarted;
+    nextNode5.priority = 1;
+
+    Dependency nextDependency1{};
+    nextDependency1.fromNode = 1;
+    nextDependency1.toNode = 4;
+
+    Dependency nextDependency2{};
+    nextDependency2.fromNode = 1;
+    nextDependency2.toNode = 5;
+
+    Dependency nextDependency3{};
+    nextDependency3.fromNode = 2;
+    nextDependency3.toNode = 4;
+
+    std::vector<Dependency> nextDependencies =
+    {
+        nextDependency1,
+        nextDependency2,
+        nextDependency3
+    };
+
+    assert(
+        calculateUnlockValue(
+            nextNode1.id,
+            nextDependencies
+        ) == 3
+    );
+
+    assert(
+        calculateUnlockValue(
+            nextNode2.id,
+            nextDependencies
+        ) == 2
+    );
+
+    assert(
+        calculateUnlockValue(
+            nextNode3.id,
+            nextDependencies
+        ) == 1
+    );
+
+    assert(
+        calculateNextStepScore(
+            nextNode1,
+            nextDependencies
+        ) == 7
+    );
+
+    assert(
+        calculateNextStepScore(
+            nextNode2,
+            nextDependencies
+        ) == 8
+    );
+
+    std::vector<Node> nextStepNodes =
+    {
+        nextNode1,
+        nextNode2,
+        nextNode3,
+        nextNode4,
+        nextNode5
+    };
+
+    const Node* selectedNode =
+        selectNextStep(
+            nextStepNodes,
+            nextDependencies
+        );
+
+    assert(selectedNode != nullptr);
+    assert(selectedNode->id == 2);
+
+    // Tie-break by UnlockValue
+    Node tieUnlockNode1{};
+    tieUnlockNode1.id = 10;
+    tieUnlockNode1.state = State::Ready;
+    tieUnlockNode1.priority = 2;
+
+    Node tieUnlockNode2{};
+    tieUnlockNode2.id = 11;
+    tieUnlockNode2.state = State::Ready;
+    tieUnlockNode2.priority = 3;
+
+    Node tieUnlockTarget1{};
+    tieUnlockTarget1.id = 12;
+
+    Node tieUnlockTarget2{};
+    tieUnlockTarget2.id = 13;
+
+    Dependency tieUnlockDependency1{};
+    tieUnlockDependency1.fromNode = 10;
+    tieUnlockDependency1.toNode = 12;
+
+    Dependency tieUnlockDependency2{};
+    tieUnlockDependency2.fromNode = 10;
+    tieUnlockDependency2.toNode = 13;
+
+    std::vector<Dependency> tieUnlockDependencies =
+    {
+        tieUnlockDependency1,
+        tieUnlockDependency2
+    };
+
+    std::vector<Node> tieUnlockNodes =
+    {
+        tieUnlockNode1,
+        tieUnlockNode2,
+        tieUnlockTarget1,
+        tieUnlockTarget2
+    };
+
+    const Node* tieUnlockSelected =
+        selectNextStep(
+            tieUnlockNodes,
+            tieUnlockDependencies
+        );
+
+    assert(tieUnlockSelected != nullptr);
+    assert(tieUnlockSelected->id == 10);
+
+    // Tie-break by smaller ID
+    Node tieIdNode1{};
+    tieIdNode1.id = 20;
+    tieIdNode1.state = State::Ready;
+    tieIdNode1.priority = 2;
+
+    Node tieIdNode2{};
+    tieIdNode2.id = 19;
+    tieIdNode2.state = State::Ready;
+    tieIdNode2.priority = 2;
+
+    std::vector<Node> tieIdNodes =
+    {
+        tieIdNode1,
+        tieIdNode2
+    };
+
+    std::vector<Dependency> tieIdDependencies;
+
+    const Node* tieIdSelected =
+        selectNextStep(
+            tieIdNodes,
+            tieIdDependencies
+        );
+
+    assert(tieIdSelected != nullptr);
+    assert(tieIdSelected->id == 19);
+
+    // No Ready node
+    Node blockedNode{};
+    blockedNode.id = 30;
+    blockedNode.state = State::Blocked;
+    blockedNode.priority = 3;
+
+    Node completedNode{};
+    completedNode.id = 31;
+    completedNode.state = State::Completed;
+    completedNode.priority = 3;
+
+    std::vector<Node> noReadyNodes =
+    {
+        blockedNode,
+        completedNode
+    };
+
+    const Node* noReadySelected =
+        selectNextStep(
+            noReadyNodes,
+            noDependencies
+        );
+
+    assert(noReadySelected == nullptr);
+
     return 0;
 }
