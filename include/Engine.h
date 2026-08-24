@@ -44,3 +44,18 @@ const Node* selectNextStep(
     const std::vector<Node>& nodes,
     const std::vector<Dependency>& dependencies
 );
+
+bool isNodeReliablyValidated(
+    const Node& node
+);
+
+const Node* findRootSuspect(
+    const Node& failedNode,
+    const std::vector<Node>& nodes,
+    const std::vector<Dependency>& dependencies
+);
+
+std::vector<int> findAffectedDownstreamNodes(
+    int rootNodeId,
+    const std::vector<Dependency>& dependencies
+);

@@ -4,7 +4,7 @@ Last Updated: 2026-08-24
 
 ## Current Phase
 
-Engine Logic - In Progress
+Engine Logic - Complete
 
 ## Completed
 
@@ -50,8 +50,15 @@ Engine Logic - In Progress
 - Deterministic Next-Step selection implemented.
 - Tie-breaking implemented using UnlockValue, Priority, and smaller node ID.
 - No-ready-node case returns no recommendation.
-- Engine logic automated tests updated to cover the Next-Step Algorithm.
+- Reliable node validation checking implemented.
+- Failure Diagnosis implemented.
+- Root Suspect tracing implemented across upstream dependencies.
+- Reliable upstream branches stop further diagnosis tracing.
+- Deterministic Root Suspect selection implemented for equal-depth branches.
+- Affected downstream node discovery implemented.
+- Engine logic automated tests updated to cover Failure Diagnosis.
 - Full automated test suite passed successfully: 2/2 tests passed.
+- Engine Logic phase completed successfully.
 
 ## Core Structure Progress
 
@@ -78,8 +85,8 @@ Engine Logic - In Progress
 - Cycle Detection - Complete
 - Constraint Checking - Complete
 - Next-Step Algorithm - Complete
-- Failure Diagnosis - Not Started
+- Failure Diagnosis - Complete
 
 ## Next Step
 
-Continue Engine Logic implementation with Failure Diagnosis.
+Begin the next major implementation phase with the structured JSON data contract.

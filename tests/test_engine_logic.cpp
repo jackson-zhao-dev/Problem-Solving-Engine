@@ -457,5 +457,218 @@ int main()
 
     assert(noReadySelected == nullptr);
 
+    // Failure Diagnosis tests
+
+    // Reliable validation
+    Node reliableNode{};
+    reliableNode.id = 100;
+    reliableNode.state = State::Completed;
+    reliableNode.validation.result = ValidationResult::Pass;
+
+    assert(
+        isNodeReliablyValidated(reliableNode)
+    );
+
+    Node pendingValidationNode{};
+    pendingValidationNode.id = 101;
+    pendingValidationNode.state = State::Completed;
+    pendingValidationNode.validation.result =
+        ValidationResult::Pending;
+
+    assert(
+        !isNodeReliablyValidated(
+            pendingValidationNode
+        )
+    );
+
+    Node failedValidationNode{};
+    failedValidationNode.id = 102;
+    failedValidationNode.state = State::Failed;
+    failedValidationNode.validation.result =
+        ValidationResult::Fail;
+
+    assert(
+        !isNodeReliablyValidated(
+            failedValidationNode
+        )
+    );
+
+    // All upstream nodes are reliable:
+    // failed node itself is the Root Suspect
+    Node reliableUpstream{};
+    reliableUpstream.id = 110;
+    reliableUpstream.state = State::Completed;
+    reliableUpstream.validation.result =
+        ValidationResult::Pass;
+
+    Node currentFailedNode{};
+    currentFailedNode.id = 111;
+    currentFailedNode.state = State::Failed;
+    currentFailedNode.validation.result =
+        ValidationResult::Fail;
+
+    std::vector<Node> reliableUpstreamNodes =
+    {
+        reliableUpstream,
+        currentFailedNode
+    };
+
+    Dependency reliableUpstreamDependency{};
+    reliableUpstreamDependency.fromNode = 110;
+    reliableUpstreamDependency.toNode = 111;
+
+    std::vector<Dependency> reliableUpstreamDependencies =
+    {
+        reliableUpstreamDependency
+    };
+
+    const Node* currentRootSuspect =
+        findRootSuspect(
+            currentFailedNode,
+            reliableUpstreamNodes,
+            reliableUpstreamDependencies
+        );
+
+    assert(currentRootSuspect != nullptr);
+    assert(currentRootSuspect->id == 111);
+
+    // Trace through unreliable upstream nodes
+    Node earliestUnreliableNode{};
+    earliestUnreliableNode.id = 120;
+    earliestUnreliableNode.state = State::Completed;
+    earliestUnreliableNode.validation.result =
+        ValidationResult::Pending;
+
+    Node middleUnreliableNode{};
+    middleUnreliableNode.id = 121;
+    middleUnreliableNode.state = State::Completed;
+    middleUnreliableNode.validation.result =
+        ValidationResult::Pending;
+
+    Node finalFailedNode{};
+    finalFailedNode.id = 122;
+    finalFailedNode.state = State::Failed;
+    finalFailedNode.validation.result =
+        ValidationResult::Fail;
+
+    std::vector<Node> diagnosisChainNodes =
+    {
+        earliestUnreliableNode,
+        middleUnreliableNode,
+        finalFailedNode
+    };
+
+    Dependency diagnosisDependency1{};
+    diagnosisDependency1.fromNode = 120;
+    diagnosisDependency1.toNode = 121;
+
+    Dependency diagnosisDependency2{};
+    diagnosisDependency2.fromNode = 121;
+    diagnosisDependency2.toNode = 122;
+
+    std::vector<Dependency> diagnosisChainDependencies =
+    {
+        diagnosisDependency1,
+        diagnosisDependency2
+    };
+
+    const Node* chainRootSuspect =
+        findRootSuspect(
+            finalFailedNode,
+            diagnosisChainNodes,
+            diagnosisChainDependencies
+        );
+
+    assert(chainRootSuspect != nullptr);
+    assert(chainRootSuspect->id == 120);
+
+    // Equal-depth unreliable branches:
+    // smaller ID is selected deterministically
+    Node branchUnreliableNode1{};
+    branchUnreliableNode1.id = 130;
+    branchUnreliableNode1.state = State::Completed;
+    branchUnreliableNode1.validation.result =
+        ValidationResult::Pending;
+
+    Node branchUnreliableNode2{};
+    branchUnreliableNode2.id = 131;
+    branchUnreliableNode2.state = State::Completed;
+    branchUnreliableNode2.validation.result =
+        ValidationResult::Pending;
+
+    Node branchFailedNode{};
+    branchFailedNode.id = 132;
+    branchFailedNode.state = State::Failed;
+    branchFailedNode.validation.result =
+        ValidationResult::Fail;
+
+    std::vector<Node> branchDiagnosisNodes =
+    {
+        branchUnreliableNode1,
+        branchUnreliableNode2,
+        branchFailedNode
+    };
+
+    Dependency branchDependency1{};
+    branchDependency1.fromNode = 131;
+    branchDependency1.toNode = 132;
+
+    Dependency branchDependency2{};
+    branchDependency2.fromNode = 130;
+    branchDependency2.toNode = 132;
+
+    std::vector<Dependency> branchDiagnosisDependencies =
+    {
+        branchDependency1,
+        branchDependency2
+    };
+
+    const Node* branchRootSuspect =
+        findRootSuspect(
+            branchFailedNode,
+            branchDiagnosisNodes,
+            branchDiagnosisDependencies
+        );
+
+    assert(branchRootSuspect != nullptr);
+    assert(branchRootSuspect->id == 130);
+
+    // Affected downstream nodes
+    Dependency affectedDependency1{};
+    affectedDependency1.fromNode = 140;
+    affectedDependency1.toNode = 141;
+
+    Dependency affectedDependency2{};
+    affectedDependency2.fromNode = 141;
+    affectedDependency2.toNode = 142;
+
+    Dependency affectedDependency3{};
+    affectedDependency3.fromNode = 140;
+    affectedDependency3.toNode = 143;
+
+    Dependency affectedDependency4{};
+    affectedDependency4.fromNode = 143;
+    affectedDependency4.toNode = 144;
+
+    std::vector<Dependency> affectedDependencies =
+    {
+        affectedDependency1,
+        affectedDependency2,
+        affectedDependency3,
+        affectedDependency4
+    };
+
+    std::vector<int> affectedNodes =
+        findAffectedDownstreamNodes(
+            140,
+            affectedDependencies
+        );
+
+    assert(affectedNodes.size() == 4);
+    assert(affectedNodes[0] == 141);
+    assert(affectedNodes[1] == 142);
+    assert(affectedNodes[2] == 143);
+    assert(affectedNodes[3] == 144);
+
     return 0;
 }

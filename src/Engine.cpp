@@ -1,5 +1,6 @@
 #include "Engine.h"
 
+#include <algorithm>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -71,6 +72,67 @@ namespace
         visited.insert(nodeId);
 
         return false;
+    }
+
+    void traceRootSuspect(
+        int currentNodeId,
+        int currentDepth,
+        const std::vector<Node>& nodes,
+        const std::vector<Dependency>& dependencies,
+        std::unordered_set<int>& path,
+        const Node*& bestNode,
+        int& bestDepth
+    )
+    {
+        for (const Dependency& dependency : dependencies)
+        {
+            if (dependency.toNode != currentNodeId)
+            {
+                continue;
+            }
+
+            const Node* upstreamNode =
+                findNodeById(nodes, dependency.fromNode);
+
+            if (upstreamNode == nullptr)
+            {
+                continue;
+            }
+
+            if (isNodeReliablyValidated(*upstreamNode))
+            {
+                continue;
+            }
+
+            const int upstreamDepth = currentDepth + 1;
+
+            if (upstreamDepth > bestDepth ||
+                (upstreamDepth == bestDepth &&
+                 upstreamNode->id < bestNode->id))
+            {
+                bestNode = upstreamNode;
+                bestDepth = upstreamDepth;
+            }
+
+            if (path.count(upstreamNode->id) > 0)
+            {
+                continue;
+            }
+
+            path.insert(upstreamNode->id);
+
+            traceRootSuspect(
+                upstreamNode->id,
+                upstreamDepth,
+                nodes,
+                dependencies,
+                path,
+                bestNode,
+                bestDepth
+            );
+
+            path.erase(upstreamNode->id);
+        }
     }
 }
 
@@ -334,4 +396,87 @@ const Node* selectNextStep(
     }
 
     return bestNode;
+}
+
+bool isNodeReliablyValidated(
+    const Node& node
+)
+{
+    return node.state == State::Completed &&
+           node.validation.result == ValidationResult::Pass;
+}
+
+const Node* findRootSuspect(
+    const Node& failedNode,
+    const std::vector<Node>& nodes,
+    const std::vector<Dependency>& dependencies
+)
+{
+    const Node* bestNode = &failedNode;
+    int bestDepth = 0;
+
+    std::unordered_set<int> path;
+    path.insert(failedNode.id);
+
+    traceRootSuspect(
+        failedNode.id,
+        0,
+        nodes,
+        dependencies,
+        path,
+        bestNode,
+        bestDepth
+    );
+
+    return bestNode;
+}
+
+std::vector<int> findAffectedDownstreamNodes(
+    int rootNodeId,
+    const std::vector<Dependency>& dependencies
+)
+{
+    std::vector<int> affectedNodes;
+    std::vector<int> pendingNodes;
+
+    std::unordered_set<int> visited;
+    visited.insert(rootNodeId);
+
+    pendingNodes.push_back(rootNodeId);
+
+    while (!pendingNodes.empty())
+    {
+        const int currentNodeId = pendingNodes.back();
+        pendingNodes.pop_back();
+
+        for (const Dependency& dependency : dependencies)
+        {
+            if (dependency.fromNode != currentNodeId)
+            {
+                continue;
+            }
+
+            if (visited.count(dependency.toNode) > 0)
+            {
+                continue;
+            }
+
+            visited.insert(dependency.toNode);
+
+            affectedNodes.push_back(
+                dependency.toNode
+            );
+
+            pendingNodes.push_back(
+                dependency.toNode
+            );
+        }
+    }
+
+    std::sort(
+        affectedNodes.begin(),
+        affectedNodes.end()
+    );
+
+    return affectedNodes;
 }
