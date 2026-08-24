@@ -35,8 +35,11 @@ Engine Logic - In Progress
 - State-transition rules implemented.
 - Ready-state evaluation implemented.
 - Dependency direction follows `fromNode -> toNode`, where `toNode` waits for `fromNode`.
-- Engine logic automated tests implemented in `tests/test_engine_logic.cpp`.
-- Engine logic test target integrated into CMake.
+- Dependency validation implemented.
+- Invalid dependency references are detected.
+- Self-dependencies are detected and rejected.
+- Dependency cycle detection implemented.
+- Engine logic automated tests updated to cover dependency validation and cycle detection.
 - Full automated test suite passed successfully: 2/2 tests passed.
 
 ## Core Structure Progress
@@ -60,12 +63,12 @@ Engine Logic - In Progress
 
 - State Transition Rules - Complete
 - Ready-state Evaluation - Complete
-- Dependency Validation - Not Started
-- Cycle Detection - Not Started
+- Dependency Validation - Complete
+- Cycle Detection - Complete
 - Constraint Checking - Not Started
 - Next-Step Algorithm - Not Started
 - Failure Diagnosis - Not Started
 
 ## Next Step
 
-Continue Engine Logic implementation with dependency validation and cycle detection.
+Continue Engine Logic implementation with constraint checking.

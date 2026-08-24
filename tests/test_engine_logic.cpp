@@ -47,7 +47,6 @@ int main()
         satisfiedConstraint
     };
 
-    // Completed upstream dependency + satisfied constraint -> Ready
     assert(
         evaluateReadyState(
             node2,
@@ -57,7 +56,6 @@ int main()
         ) == State::Ready
     );
 
-    // Incomplete upstream dependency -> Blocked
     nodes[0].state = State::InProgress;
 
     assert(
@@ -69,10 +67,8 @@ int main()
         ) == State::Blocked
     );
 
-    // Restore upstream dependency
     nodes[0].state = State::Completed;
 
-    // Violated constraint -> Blocked
     Constraint violatedConstraint{};
     violatedConstraint.status = ConstraintStatus::Violated;
 
@@ -90,7 +86,6 @@ int main()
         ) == State::Blocked
     );
 
-    // Node with no dependencies and satisfied constraints -> Ready
     Node node3{};
     node3.id = 3;
     node3.state = State::NotStarted;
@@ -104,6 +99,110 @@ int main()
             noDependencies,
             satisfiedConstraints
         ) == State::Ready
+    );
+
+    // Dependency Validation tests
+    Node dependencyNode1{};
+    dependencyNode1.id = 1;
+
+    Node dependencyNode2{};
+    dependencyNode2.id = 2;
+
+    Node dependencyNode3{};
+    dependencyNode3.id = 3;
+
+    std::vector<Node> dependencyNodes =
+    {
+        dependencyNode1,
+        dependencyNode2,
+        dependencyNode3
+    };
+
+    Dependency validDependency1{};
+    validDependency1.fromNode = 1;
+    validDependency1.toNode = 2;
+
+    Dependency validDependency2{};
+    validDependency2.fromNode = 2;
+    validDependency2.toNode = 3;
+
+    std::vector<Dependency> validDependencies =
+    {
+        validDependency1,
+        validDependency2
+    };
+
+    assert(
+        areDependenciesValid(
+            dependencyNodes,
+            validDependencies
+        )
+    );
+
+    Dependency missingNodeDependency{};
+    missingNodeDependency.fromNode = 1;
+    missingNodeDependency.toNode = 99;
+
+    std::vector<Dependency> invalidReferenceDependencies =
+    {
+        missingNodeDependency
+    };
+
+    assert(
+        !areDependenciesValid(
+            dependencyNodes,
+            invalidReferenceDependencies
+        )
+    );
+
+    Dependency selfDependency{};
+    selfDependency.fromNode = 2;
+    selfDependency.toNode = 2;
+
+    std::vector<Dependency> selfDependencies =
+    {
+        selfDependency
+    };
+
+    assert(
+        !areDependenciesValid(
+            dependencyNodes,
+            selfDependencies
+        )
+    );
+
+    // Cycle Detection tests
+    assert(
+        !hasDependencyCycle(
+            dependencyNodes,
+            validDependencies
+        )
+    );
+
+    Dependency cycleDependency1{};
+    cycleDependency1.fromNode = 1;
+    cycleDependency1.toNode = 2;
+
+    Dependency cycleDependency2{};
+    cycleDependency2.fromNode = 2;
+    cycleDependency2.toNode = 3;
+
+    Dependency cycleDependency3{};
+    cycleDependency3.fromNode = 3;
+    cycleDependency3.toNode = 1;
+
+    std::vector<Dependency> cyclicDependencies =
+    {
+        cycleDependency1,
+        cycleDependency2,
+        cycleDependency3
+    };
+
+    assert(
+        hasDependencyCycle(
+            dependencyNodes,
+            cyclicDependencies
+        )
     );
 
     return 0;

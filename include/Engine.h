@@ -15,3 +15,13 @@ State evaluateReadyState(
     const std::vector<Dependency>& dependencies,
     const std::vector<Constraint>& constraints
 );
+
+bool areDependenciesValid(
+    const std::vector<Node>& nodes,
+    const std::vector<Dependency>& dependencies
+);
+
+bool hasDependencyCycle(
+    const std::vector<Node>& nodes,
+    const std::vector<Dependency>& dependencies
+);

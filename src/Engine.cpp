@@ -1,5 +1,9 @@
 #include "Engine.h"
 
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
+
 namespace
 {
     const Node* findNodeById(
@@ -16,6 +20,57 @@ namespace
         }
 
         return nullptr;
+    }
+
+    bool nodeIdExists(
+        const std::vector<Node>& nodes,
+        int id
+    )
+    {
+        return findNodeById(nodes, id) != nullptr;
+    }
+
+    bool visitForCycle(
+        int nodeId,
+        const std::unordered_map<int, std::vector<int>>& graph,
+        std::unordered_set<int>& visiting,
+        std::unordered_set<int>& visited
+    )
+    {
+        if (visiting.count(nodeId) > 0)
+        {
+            return true;
+        }
+
+        if (visited.count(nodeId) > 0)
+        {
+            return false;
+        }
+
+        visiting.insert(nodeId);
+
+        auto it = graph.find(nodeId);
+
+        if (it != graph.end())
+        {
+            for (int nextNodeId : it->second)
+            {
+                if (visitForCycle(
+                        nextNodeId,
+                        graph,
+                        visiting,
+                        visited
+                    ))
+                {
+                    return true;
+                }
+            }
+        }
+
+        visiting.erase(nodeId);
+        visited.insert(nodeId);
+
+        return false;
     }
 }
 
@@ -86,4 +141,59 @@ State evaluateReadyState(
     }
 
     return State::Ready;
+}
+
+bool areDependenciesValid(
+    const std::vector<Node>& nodes,
+    const std::vector<Dependency>& dependencies
+)
+{
+    for (const Dependency& dependency : dependencies)
+    {
+        if (dependency.fromNode == dependency.toNode)
+        {
+            return false;
+        }
+
+        if (!nodeIdExists(nodes, dependency.fromNode) ||
+            !nodeIdExists(nodes, dependency.toNode))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool hasDependencyCycle(
+    const std::vector<Node>& nodes,
+    const std::vector<Dependency>& dependencies
+)
+{
+    std::unordered_map<int, std::vector<int>> graph;
+
+    for (const Dependency& dependency : dependencies)
+    {
+        graph[dependency.fromNode].push_back(
+            dependency.toNode
+        );
+    }
+
+    std::unordered_set<int> visiting;
+    std::unordered_set<int> visited;
+
+    for (const Node& node : nodes)
+    {
+        if (visitForCycle(
+                node.id,
+                graph,
+                visiting,
+                visited
+            ))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
