@@ -23,6 +23,8 @@ add_executable(problem-solving-engine
     src/JsonParser.cpp
     src/ProblemValidator.cpp
     src/ProblemLoader.cpp
+    src/ProblemSerializer.cpp
+    src/ProblemStorage.cpp
 )
 
 target_include_directories(problem-solving-engine PRIVATE
@@ -114,4 +116,48 @@ target_link_libraries(problem-loader-tests PRIVATE
 add_test(
     NAME ProblemLoaderTests
     COMMAND problem-loader-tests
+)
+
+add_executable(problem-serializer-tests
+    tests/test_problem_serializer.cpp
+    src/ProblemSerializer.cpp
+    src/JsonParser.cpp
+    src/ProblemValidator.cpp
+    src/Engine.cpp
+)
+
+target_include_directories(problem-serializer-tests PRIVATE
+    include
+)
+
+target_link_libraries(problem-serializer-tests PRIVATE
+    nlohmann_json::nlohmann_json
+)
+
+add_test(
+    NAME ProblemSerializerTests
+    COMMAND problem-serializer-tests
+)
+
+add_executable(problem-storage-tests
+    tests/test_problem_storage.cpp
+    src/ProblemStorage.cpp
+    src/ProblemLoader.cpp
+    src/ProblemSerializer.cpp
+    src/JsonParser.cpp
+    src/ProblemValidator.cpp
+    src/Engine.cpp
+)
+
+target_include_directories(problem-storage-tests PRIVATE
+    include
+)
+
+target_link_libraries(problem-storage-tests PRIVATE
+    nlohmann_json::nlohmann_json
+)
+
+add_test(
+    NAME ProblemStorageTests
+    COMMAND problem-storage-tests
 )
