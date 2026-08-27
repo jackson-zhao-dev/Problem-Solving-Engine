@@ -189,3 +189,22 @@ add_test(
     NAME OpenAIUsageGuardTests
     COMMAND openai-usage-guard-tests
 )
+
+add_executable(openai-client-tests
+    tests/test_openai_client.cpp
+    src/OpenAIClient.cpp
+    src/OpenAIUsageGuard.cpp
+)
+
+target_include_directories(openai-client-tests PRIVATE
+    include
+)
+
+target_link_libraries(openai-client-tests PRIVATE
+    nlohmann_json::nlohmann_json
+)
+
+add_test(
+    NAME OpenAIClientTests
+    COMMAND openai-client-tests
+)
