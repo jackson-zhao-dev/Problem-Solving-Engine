@@ -26,6 +26,9 @@ add_executable(problem-solving-engine
     src/ProblemLoader.cpp
     src/ProblemSerializer.cpp
     src/ProblemStorage.cpp
+    src/OpenAIConfig.cpp
+    src/OpenAIUsageGuard.cpp
+    src/OpenAIClient.cpp
     src/CurlHttpClient.cpp
 )
 
