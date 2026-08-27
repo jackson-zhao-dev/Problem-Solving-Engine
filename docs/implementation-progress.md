@@ -4,7 +4,7 @@ Last Updated: 2026-08-26
 
 ## Current Phase
 
-Project Save/Load Support - Complete
+API Integration Safety Preparation - Complete
 
 ## Completed
 
@@ -95,8 +95,32 @@ Project Save/Load Support - Complete
 - Malformed JSON files are detected and rejected.
 - File storage round-trip automated test implemented.
 - Temporary storage test files are cleaned up after testing.
-- Full automated test suite passed successfully: 7/7 tests passed.
 - Project Save/Load Support phase completed successfully.
+- Environment-variable based OpenAI configuration introduced.
+- `.env.example` created without containing any real API secret.
+- Local environment configuration protected through `.gitignore`.
+- `OpenAIConfig` interface implemented in `include/OpenAIConfig.h`.
+- `OpenAIConfig` implementation created in `src/OpenAIConfig.cpp`.
+- `OPENAI_API_KEY` is loaded from the environment rather than hard-coded into source code.
+- `OPENAI_MODEL` is loaded from the environment.
+- Missing required OpenAI configuration values are rejected.
+- Maximum requests per run can be configured through `OPENAI_MAX_REQUESTS_PER_RUN`.
+- Maximum input length can be configured through `OPENAI_MAX_INPUT_CHARS`.
+- Invalid numeric safety configuration values are rejected.
+- Zero and negative safety limits are rejected.
+- Non-numeric and partially numeric safety values are rejected.
+- OpenAI configuration automated tests implemented.
+- `OpenAIUsageGuard` interface implemented in `include/OpenAIUsageGuard.h`.
+- `OpenAIUsageGuard` implementation created in `src/OpenAIUsageGuard.cpp`.
+- Per-run request counting implemented.
+- Maximum request-count enforcement implemented.
+- Maximum input-length enforcement implemented.
+- Rejected requests do not consume request quota.
+- Invalid usage-guard configuration is rejected.
+- OpenAI usage-guard automated tests implemented.
+- API integration safety preparation committed and pushed to GitHub.
+- Full automated test suite passed successfully: 9/9 tests passed.
+- API Integration Safety Preparation phase completed successfully.
 
 ## Core Structure Progress
 
@@ -154,13 +178,38 @@ Project Save/Load Support - Complete
 - Missing File Rejection - Complete
 - Malformed JSON File Rejection - Complete
 - Storage Round-Trip Test - Complete
-- Full Automated Test Suite - 7/7 Passed
+
+## API Integration Safety Progress
+
+- Environment-Based API Configuration - Complete
+- API Key Source-Code Isolation - Complete
+- Safe `.env.example` Template - Complete
+- Local Secret Exclusion through `.gitignore` - Complete
+- OpenAIConfig Interface - Complete
+- OpenAIConfig Implementation - Complete
+- Required Environment Variable Validation - Complete
+- Positive Integer Safety-Limit Validation - Complete
+- Per-Run Request Limit Configuration - Complete
+- Maximum Input-Length Configuration - Complete
+- OpenAI Configuration Tests - Complete
+- OpenAIUsageGuard Interface - Complete
+- OpenAIUsageGuard Implementation - Complete
+- Request Quota Enforcement - Complete
+- Input-Length Enforcement - Complete
+- Rejected-Request Quota Preservation - Complete
+- Usage Guard Tests - Complete
+- Full Automated Test Suite - 9/9 Passed
 
 ## Next Step
 
-Begin API integration safety preparation:
+Begin external AI API integration:
 
-- Protect API keys using environment variables or another ignored local configuration method.
-- Ensure secrets are never committed to GitHub.
-- Define spending-limit and usage-safety safeguards.
-- Prepare the project architecture for later external AI API integration.
+- Create the OpenAI API client interface.
+- Implement the HTTP request layer for OpenAI communication.
+- Keep API credentials isolated from source code.
+- Enforce `OpenAIUsageGuard` before every external API request.
+- Build structured prompts from validated `ProblemData`.
+- Receive and parse AI responses safely.
+- Handle network failures, API errors, invalid responses, and timeouts.
+- Add automated tests using non-network test doubles or mock responses before relying on live API calls.
+- Perform a small controlled live API test only after the integration layer passes local tests.
