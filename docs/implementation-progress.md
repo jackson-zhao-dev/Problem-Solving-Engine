@@ -4,7 +4,7 @@ Last Updated: 2026-08-26
 
 ## Current Phase
 
-API Integration Safety Preparation - Complete
+OpenAI API Integration and Live Connectivity Validation - Complete
 
 ## Completed
 
@@ -12,6 +12,9 @@ API Integration Safety Preparation - Complete
 - C++17 compiler configured with clang++.
 - Git and GitHub workflow tested successfully.
 - Initial project directory structure created.
+
+### Core Data Models
+
 - State data model implemented in `include/State.h`.
 - Validation data model implemented in `include/Validation.h`.
 - Constraint data model implemented in `include/Constraint.h`.
@@ -19,6 +22,9 @@ API Integration Safety Preparation - Complete
 - Node data model implemented in `include/Node.h`.
 - Goal data model implemented in `include/Goal.h`.
 - All six core data models completed successfully.
+
+### Engineering Foundation
+
 - Homebrew installed and configured.
 - CMake installed and configured successfully.
 - CMake executable path configured in VS Code.
@@ -30,6 +36,9 @@ API Integration Safety Preparation - Complete
 - Core model test target integrated into CMake.
 - CTest configured successfully.
 - Core model automated test passed successfully.
+
+### Engine Logic
+
 - Engine interface created in `include/Engine.h`.
 - Engine implementation created in `src/Engine.cpp`.
 - State-transition rules implemented.
@@ -58,6 +67,9 @@ API Integration Safety Preparation - Complete
 - Affected downstream node discovery implemented.
 - Engine logic automated tests updated to cover Failure Diagnosis.
 - Engine Logic phase completed successfully.
+
+### Structured JSON Data
+
 - JSON Data Contract Version 1.0 documented.
 - `nlohmann/json` integrated through CMake FetchContent.
 - `ProblemData` aggregate model implemented.
@@ -76,6 +88,9 @@ API Integration Safety Preparation - Complete
 - Semantically invalid problem data is rejected.
 - Problem loader automated test implemented.
 - Structured JSON Data Contract phase completed successfully.
+
+### Project Save / Load Support
+
 - Problem serializer interface implemented in `include/ProblemSerializer.h`.
 - Problem serializer implemented in `src/ProblemSerializer.cpp`.
 - State values can be serialized back to JSON strings.
@@ -96,9 +111,13 @@ API Integration Safety Preparation - Complete
 - File storage round-trip automated test implemented.
 - Temporary storage test files are cleaned up after testing.
 - Project Save/Load Support phase completed successfully.
+
+### API Integration Safety Preparation
+
 - Environment-variable based OpenAI configuration introduced.
 - `.env.example` created without containing any real API secret.
 - Local environment configuration protected through `.gitignore`.
+- `.env` and `.env.*` are ignored while `.env.example` remains trackable.
 - `OpenAIConfig` interface implemented in `include/OpenAIConfig.h`.
 - `OpenAIConfig` implementation created in `src/OpenAIConfig.cpp`.
 - `OPENAI_API_KEY` is loaded from the environment rather than hard-coded into source code.
@@ -118,9 +137,73 @@ API Integration Safety Preparation - Complete
 - Rejected requests do not consume request quota.
 - Invalid usage-guard configuration is rejected.
 - OpenAI usage-guard automated tests implemented.
-- API integration safety preparation committed and pushed to GitHub.
-- Full automated test suite passed successfully: 9/9 tests passed.
 - API Integration Safety Preparation phase completed successfully.
+
+### OpenAI API Integration
+
+- Generic HTTP client abstraction introduced through `HttpClient`.
+- HTTP response abstraction introduced for status-code and response-body handling.
+- `OpenAIClient` interface implemented in `include/OpenAIClient.h`.
+- `OpenAIClient` implementation created in `src/OpenAIClient.cpp`.
+- OpenAI request execution is protected by `OpenAIUsageGuard`.
+- Requests are sent to the OpenAI Responses API endpoint at `/v1/responses`.
+- Request JSON includes the configured model and input text.
+- Authorization is provided through the environment-loaded API key.
+- Non-success HTTP status codes are detected and rejected.
+- Invalid JSON responses are detected and rejected.
+- Incomplete API responses are detected and rejected.
+- Missing output arrays are detected and rejected.
+- Responses without usable `output_text` are detected and rejected.
+- Successful `output_text` values are extracted and returned to the caller.
+- Fake HTTP test infrastructure implemented through `FakeHttpClient`.
+- OpenAI client automated test verifies endpoint selection.
+- OpenAI client automated test verifies request headers.
+- OpenAI client automated test verifies serialized request body.
+- OpenAI client automated test verifies response-text extraction.
+- OpenAI client automated test verifies usage-guard request counting.
+- OpenAI client behavior can be tested without performing live network requests.
+
+### Real HTTP Transport
+
+- libcurl integrated into the CMake build through `CURL::libcurl`.
+- `CurlHttpClient` interface implemented.
+- `CurlHttpClient` implementation created in `src/CurlHttpClient.cpp`.
+- HTTP POST requests implemented using libcurl.
+- Custom request headers are supported.
+- Request bodies are transmitted through libcurl.
+- Response bodies are captured through a write callback.
+- HTTP response status codes are captured.
+- libcurl transport failures are converted into runtime errors.
+- Curl HTTP transport integrated into the main executable.
+
+### Live API Connectivity Validation
+
+- OpenAI modules integrated into the main executable.
+- Guarded live API test entry point added to `src/main.cpp`.
+- Live API execution is controlled by `enableLiveOpenAITest`.
+- Live API execution is disabled by default.
+- Local `.env` configuration successfully loaded into the runtime environment.
+- Local API credentials confirmed to remain excluded from Git tracking.
+- A controlled real OpenAI Responses API request was executed successfully.
+- The live request returned the expected response: `API connection successful.`
+- End-to-end connectivity was validated across:
+  - application startup,
+  - environment configuration,
+  - usage guard,
+  - OpenAI client,
+  - HTTP abstraction,
+  - libcurl transport,
+  - OpenAI Responses API,
+  - response parsing,
+  - returned output text.
+- After live validation, `enableLiveOpenAITest` was restored to `false`.
+- The project was rebuilt after restoring the safe default.
+- Full automated test suite passed successfully: 10/10 tests passed.
+- Normal executable startup was verified after disabling live API access.
+- With live API access disabled, normal execution prints only:
+  `Problem-Solving Engine is running.`
+- Final Git working tree verified clean after the live test.
+- OpenAI API Integration and Live Connectivity Validation phase completed successfully.
 
 ## Core Structure Progress
 
@@ -162,7 +245,7 @@ API Integration Safety Preparation - Complete
 - Problem Validator Tests - Complete
 - Problem Loader Tests - Complete
 
-## Project Save/Load Progress
+## Project Save / Load Progress
 
 - Problem Serializer Interface - Complete
 - Problem Serializer Implementation - Complete
@@ -198,18 +281,67 @@ API Integration Safety Preparation - Complete
 - Input-Length Enforcement - Complete
 - Rejected-Request Quota Preservation - Complete
 - Usage Guard Tests - Complete
-- Full Automated Test Suite - 9/9 Passed
+
+## OpenAI API Integration Progress
+
+- HTTP Client Abstraction - Complete
+- HTTP Response Abstraction - Complete
+- OpenAIClient Interface - Complete
+- OpenAIClient Implementation - Complete
+- Responses API Request Construction - Complete
+- API Authorization Header Construction - Complete
+- Usage Guard Enforcement Before Requests - Complete
+- HTTP Status Validation - Complete
+- JSON Response Parsing - Complete
+- Incomplete Response Detection - Complete
+- Missing Output Detection - Complete
+- Output Text Extraction - Complete
+- Fake HTTP Client Test Infrastructure - Complete
+- OpenAI Client Automated Test - Complete
+- libcurl Integration - Complete
+- CurlHttpClient Implementation - Complete
+- Main Executable Integration - Complete
+- Guarded Live API Entry Point - Complete
+- Controlled Live API Connectivity Test - Complete
+- Safe Post-Test Disablement - Complete
+- Full Automated Test Suite - 10/10 Passed
+
+## Current Automated Tests
+
+1. CoreModelTests
+2. EngineLogicTests
+3. JsonParserTests
+4. ProblemValidatorTests
+5. ProblemLoaderTests
+6. ProblemSerializerTests
+7. ProblemStorageTests
+8. OpenAIConfigTests
+9. OpenAIUsageGuardTests
+10. OpenAIClientTests
+
+Current result:
+
+- 10/10 tests passed.
+- 0 tests failed.
 
 ## Next Step
 
-Begin external AI API integration:
+Begin AI-assisted problem interpretation and structured engine integration.
 
-- Create the OpenAI API client interface.
-- Implement the HTTP request layer for OpenAI communication.
-- Keep API credentials isolated from source code.
-- Enforce `OpenAIUsageGuard` before every external API request.
+The external API connection itself is now proven and should no longer be treated as the main development task.
+
+Next development goals:
+
+- Define the exact role of AI inside the Problem-Solving Engine.
+- Preserve the project principle that AI proposes structure while the deterministic Engine makes decisions.
 - Build structured prompts from validated `ProblemData`.
-- Receive and parse AI responses safely.
-- Handle network failures, API errors, invalid responses, and timeouts.
-- Add automated tests using non-network test doubles or mock responses before relying on live API calls.
-- Perform a small controlled live API test only after the integration layer passes local tests.
+- Define a strict machine-readable response format for AI-generated proposals.
+- Parse AI-generated responses into internal candidate structures.
+- Validate all AI-generated structures before allowing them into Engine logic.
+- Reject malformed, incomplete, or semantically invalid AI proposals.
+- Ensure AI output cannot directly bypass deterministic Engine rules.
+- Add automated tests for AI-response parsing and validation.
+- Add automated error-path tests for API failures and malformed API responses.
+- Add timeout and network-safety behavior to the real HTTP transport where appropriate.
+- Keep live API testing small, controlled, and disabled by default.
+- Continue increasing automated coverage before expanding live AI behavior.
