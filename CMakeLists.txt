@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(ProblemSolvingEngine LANGUAGES CXX)
+find_package(CURL REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -25,6 +26,7 @@ add_executable(problem-solving-engine
     src/ProblemLoader.cpp
     src/ProblemSerializer.cpp
     src/ProblemStorage.cpp
+    src/CurlHttpClient.cpp
 )
 
 target_include_directories(problem-solving-engine PRIVATE
@@ -33,6 +35,7 @@ target_include_directories(problem-solving-engine PRIVATE
 
 target_link_libraries(problem-solving-engine PRIVATE
     nlohmann_json::nlohmann_json
+    CURL::libcurl
 )
 
 enable_testing()
