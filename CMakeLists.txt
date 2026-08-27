@@ -161,3 +161,31 @@ add_test(
     NAME ProblemStorageTests
     COMMAND problem-storage-tests
 )
+
+add_executable(openai-config-tests
+    tests/test_openai_config.cpp
+    src/OpenAIConfig.cpp
+)
+
+target_include_directories(openai-config-tests PRIVATE
+    include
+)
+
+add_test(
+    NAME OpenAIConfigTests
+    COMMAND openai-config-tests
+)
+
+add_executable(openai-usage-guard-tests
+    tests/test_openai_usage_guard.cpp
+    src/OpenAIUsageGuard.cpp
+)
+
+target_include_directories(openai-usage-guard-tests PRIVATE
+    include
+)
+
+add_test(
+    NAME OpenAIUsageGuardTests
+    COMMAND openai-usage-guard-tests
+)
