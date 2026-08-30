@@ -30,6 +30,7 @@ add_executable(problem-solving-engine
     src/OpenAIUsageGuard.cpp
     src/OpenAIClient.cpp
     src/CurlHttpClient.cpp
+    src/ProblemPromptBuilder.cpp
 )
 
 target_include_directories(problem-solving-engine PRIVATE
@@ -213,4 +214,18 @@ target_link_libraries(openai-client-tests PRIVATE
 add_test(
     NAME OpenAIClientTests
     COMMAND openai-client-tests
+)
+
+add_executable(problem-prompt-builder-tests
+    tests/test_problem_prompt_builder.cpp
+    src/ProblemPromptBuilder.cpp
+)
+
+target_include_directories(problem-prompt-builder-tests PRIVATE
+    include
+)
+
+add_test(
+    NAME ProblemPromptBuilderTests
+    COMMAND problem-prompt-builder-tests
 )
