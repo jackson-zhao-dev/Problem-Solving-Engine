@@ -12,6 +12,7 @@
 #include "../include/OpenAIUsageGuard.h"
 #include "../include/OpenAIClient.h"
 #include "../include/CurlHttpClient.h"
+#include "../include/AIProblemNormalizer.h"
 
 using namespace std;
 
@@ -56,9 +57,9 @@ int main()
         << "Problem-Solving Engine is running."
         << endl;
 
-    constexpr bool enableLiveOpenAITest = false;
+    constexpr bool enableLiveAIProblemNormalizerTest = false;
 
-    if (enableLiveOpenAITest)
+    if (enableLiveAIProblemNormalizerTest)
     {
         OpenAIConfig config =
             loadOpenAIConfigFromEnvironment();
@@ -75,13 +76,18 @@ int main()
             httpClient
         );
 
-        const string response =
-            openAIClient.sendRequest(
-                "Reply with exactly: API connection successful."
+        AIProblemNormalizer normalizer(
+            openAIClient
+        );
+
+        const string normalizedProblemJson =
+            normalizer.normalize(
+                "I want to build a rubber-band-powered car "
+                "that can travel at least 10 meters."
             );
 
         cout
-            << response
+            << normalizedProblemJson
             << endl;
     }
 

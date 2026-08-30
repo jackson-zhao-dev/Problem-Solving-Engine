@@ -31,6 +31,7 @@ add_executable(problem-solving-engine
     src/OpenAIClient.cpp
     src/CurlHttpClient.cpp
     src/ProblemPromptBuilder.cpp
+    src/AIProblemNormalizer.cpp
 )
 
 target_include_directories(problem-solving-engine PRIVATE
@@ -228,4 +229,25 @@ target_include_directories(problem-prompt-builder-tests PRIVATE
 add_test(
     NAME ProblemPromptBuilderTests
     COMMAND problem-prompt-builder-tests
+)
+
+add_executable(ai-problem-normalizer-tests
+    tests/test_ai_problem_normalizer.cpp
+    src/AIProblemNormalizer.cpp
+    src/ProblemPromptBuilder.cpp
+    src/OpenAIClient.cpp
+    src/OpenAIUsageGuard.cpp
+)
+
+target_include_directories(ai-problem-normalizer-tests PRIVATE
+    include
+)
+
+target_link_libraries(ai-problem-normalizer-tests PRIVATE
+    nlohmann_json::nlohmann_json
+)
+
+add_test(
+    NAME AIProblemNormalizerTests
+    COMMAND ai-problem-normalizer-tests
 )
