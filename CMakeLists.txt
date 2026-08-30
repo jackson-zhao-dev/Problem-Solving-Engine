@@ -32,6 +32,7 @@ add_executable(problem-solving-engine
     src/CurlHttpClient.cpp
     src/ProblemPromptBuilder.cpp
     src/AIProblemNormalizer.cpp
+    src/AIProblemParser.cpp
 )
 
 target_include_directories(problem-solving-engine PRIVATE
@@ -250,4 +251,23 @@ target_link_libraries(ai-problem-normalizer-tests PRIVATE
 add_test(
     NAME AIProblemNormalizerTests
     COMMAND ai-problem-normalizer-tests
+)
+
+add_executable(ai-problem-parser-tests
+    tests/test_ai_problem_parser.cpp
+    src/AIProblemParser.cpp
+    src/JsonParser.cpp
+)
+
+target_include_directories(ai-problem-parser-tests PRIVATE
+    include
+)
+
+target_link_libraries(ai-problem-parser-tests PRIVATE
+    nlohmann_json::nlohmann_json
+)
+
+add_test(
+    NAME AIProblemParserTests
+    COMMAND ai-problem-parser-tests
 )
