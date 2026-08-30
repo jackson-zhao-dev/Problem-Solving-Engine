@@ -33,6 +33,7 @@ add_executable(problem-solving-engine
     src/ProblemPromptBuilder.cpp
     src/AIProblemNormalizer.cpp
     src/AIProblemParser.cpp
+    src/AIProblemValidator.cpp
 )
 
 target_include_directories(problem-solving-engine PRIVATE
@@ -270,4 +271,20 @@ target_link_libraries(ai-problem-parser-tests PRIVATE
 add_test(
     NAME AIProblemParserTests
     COMMAND ai-problem-parser-tests
+)
+
+add_executable(ai-problem-validator-tests
+    tests/test_ai_problem_validator.cpp
+    src/AIProblemValidator.cpp
+    src/ProblemValidator.cpp
+    src/Engine.cpp
+)
+
+target_include_directories(ai-problem-validator-tests PRIVATE
+    include
+)
+
+add_test(
+    NAME AIProblemValidatorTests
+    COMMAND ai-problem-validator-tests
 )
