@@ -381,21 +381,29 @@ The central architectural rule remains:
 
 ---
 
-## Next Step
+## Version 1.0 Closeout
 
-Stage 7 implementation is complete.
+Version 1.0 implementation and documentation closeout is complete.
 
-Before beginning another major development stage, complete the project documentation and hardening pass:
+Completed final closeout work:
 
-- Update user-facing usage documentation.
-- Document the complete system architecture.
-- Record the Stage 7 design decisions.
-- Document setup and environment requirements.
-- Document safe API usage.
-- Document the AI authority boundary.
-- Create a concise project report describing the engineering work completed.
-- Review repository documentation for outdated statements.
-- Perform a final repository consistency check.
-- Confirm all automated tests remain green after documentation changes.
+- User-facing README documentation updated.
+- Complete system architecture documented.
+- Stage 7 design decisions recorded.
+- Setup and environment requirements documented.
+- Safe API usage documented.
+- AI authority boundary documented.
+- Final Technical Project Report created in `report/Technical-Project-Report.md`.
+- Repository documentation reviewed for outdated statements.
+- Project decision ledger updated for Version 1.0 closeout.
+- Final automated test suite executed successfully.
+- **15/15 tests passed.**
+- **0 tests failed.**
 
-After documentation and hardening are complete, determine the next engineering stage based on project goals rather than extending AI behavior without a defined requirement.
+The Version 1.0 repository now contains the implemented system, automated validation, historical design record, implementation ledger, engineering decision record, user-facing documentation, and final technical report.
+
+Future development should begin only when a new engineering or evaluation goal is clearly defined.
+
+The core architectural principle remains:
+
+> **AI proposes structure; Engine makes decisions.**
