@@ -1,65 +1,37 @@
+#include <exception>
 #include <iostream>
 #include <string>
 
-#include "../include/State.h"
-#include "../include/Validation.h"
-#include "../include/Constraint.h"
-#include "../include/Dependency.h"
-#include "../include/Node.h"
-#include "../include/Goal.h"
-
-#include "../include/OpenAIConfig.h"
-#include "../include/OpenAIUsageGuard.h"
-#include "../include/OpenAIClient.h"
-#include "../include/CurlHttpClient.h"
-#include "../include/AIProblemNormalizer.h"
+#include "AIProblemNormalizer.h"
+#include "AIProblemPipeline.h"
+#include "CurlHttpClient.h"
+#include "OpenAIClient.h"
+#include "OpenAIConfig.h"
+#include "OpenAIUsageGuard.h"
 
 using namespace std;
 
-int main()
+int main(int argc, char* argv[])
 {
-    State currentState = State::Ready;
-
-    Validation startupValidation;
-    startupValidation.description = "Check startup output";
-    startupValidation.method = "Run the program";
-    startupValidation.expectedResult =
-        "Problem-Solving Engine is running.";
-
-    Constraint budgetConstraint;
-    budgetConstraint.name = "Budget Limit";
-    budgetConstraint.type = ConstraintType::Cost;
-    budgetConstraint.value = "Under $30";
-    budgetConstraint.status =
-        ConstraintStatus::Satisfied;
-
-    Dependency buildDependency;
-    buildDependency.fromNode = 1;
-    buildDependency.toNode = 2;
-
-    Node testNode;
-    testNode.id = 1;
-    testNode.name = "Prepare Materials";
-    testNode.description =
-        "Prepare all required materials.";
-    testNode.state = State::Ready;
-    testNode.priority = 3;
-    testNode.validation = startupValidation;
-
-    Goal projectGoal;
-    projectGoal.name = "Build Rubber-Band Car";
-    projectGoal.description =
-        "Build a small car powered by a rubber band.";
-    projectGoal.successCondition =
-        "The car travels at least 10 meters.";
-
     cout
         << "Problem-Solving Engine is running."
         << endl;
 
-    constexpr bool enableLiveAIProblemNormalizerTest = false;
+    if (argc < 2 ||
+        string(argv[1]) != "--ai")
+    {
+        cout
+            << "AI-assisted mode is disabled by default."
+            << endl;
 
-    if (enableLiveAIProblemNormalizerTest)
+        cout
+            << "Run with --ai to enter a problem."
+            << endl;
+
+        return 0;
+    }
+
+    try
     {
         OpenAIConfig config =
             loadOpenAIConfigFromEnvironment();
@@ -80,15 +52,96 @@ int main()
             openAIClient
         );
 
-        const string normalizedProblemJson =
-            normalizer.normalize(
-                "I want to build a rubber-band-powered car "
-                "that can travel at least 10 meters."
+        AIProblemPipeline pipeline(
+            normalizer
+        );
+
+        cout
+            << "Enter a problem: ";
+
+        string userInput;
+        getline(cin, userInput);
+
+        if (userInput.empty())
+        {
+            cerr
+                << "Error: Problem input cannot be empty."
+                << endl;
+
+            return 1;
+        }
+
+        const ProblemData problemData =
+            pipeline.process(
+                userInput
             );
 
         cout
-            << normalizedProblemJson
+            << endl
+            << "Problem accepted by the engine."
             << endl;
+
+        cout
+            << "Goal: "
+            << problemData.goal.name
+            << endl;
+
+        cout
+            << "Success condition: "
+            << problemData.goal.successCondition
+            << endl;
+
+        cout
+            << endl
+            << "Plan:"
+            << endl;
+
+        for (const Node& node :
+             problemData.nodes)
+        {
+            cout
+                << "- ["
+                << node.id
+                << "] "
+                << node.name
+                << endl;
+
+            cout
+                << "  "
+                << node.description
+                << endl;
+        }
+
+        cout
+            << endl
+            << "Constraints:"
+            << endl;
+
+        for (const Constraint& constraint :
+             problemData.constraints)
+        {
+            cout
+                << "- "
+                << constraint.name
+                << ": "
+                << constraint.value
+                << endl;
+        }
+
+        cout
+            << endl
+            << "AI-generated problem structure passed "
+            << "engine validation."
+            << endl;
+    }
+    catch (const exception& error)
+    {
+        cerr
+            << "Error: "
+            << error.what()
+            << endl;
+
+        return 1;
     }
 
     return 0;
