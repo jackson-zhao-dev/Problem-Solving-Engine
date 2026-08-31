@@ -34,6 +34,7 @@ add_executable(problem-solving-engine
     src/AIProblemNormalizer.cpp
     src/AIProblemParser.cpp
     src/AIProblemValidator.cpp
+    src/AIProblemPipeline.cpp
 )
 
 target_include_directories(problem-solving-engine PRIVATE
@@ -287,4 +288,31 @@ target_include_directories(ai-problem-validator-tests PRIVATE
 add_test(
     NAME AIProblemValidatorTests
     COMMAND ai-problem-validator-tests
+)
+
+add_executable(ai-problem-pipeline-tests
+    tests/test_ai_problem_pipeline.cpp
+    src/AIProblemPipeline.cpp
+    src/AIProblemNormalizer.cpp
+    src/ProblemPromptBuilder.cpp
+    src/OpenAIClient.cpp
+    src/OpenAIUsageGuard.cpp
+    src/AIProblemParser.cpp
+    src/JsonParser.cpp
+    src/AIProblemValidator.cpp
+    src/ProblemValidator.cpp
+    src/Engine.cpp
+)
+
+target_include_directories(ai-problem-pipeline-tests PRIVATE
+    include
+)
+
+target_link_libraries(ai-problem-pipeline-tests PRIVATE
+    nlohmann_json::nlohmann_json
+)
+
+add_test(
+    NAME AIProblemPipelineTests
+    COMMAND ai-problem-pipeline-tests
 )
